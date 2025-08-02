@@ -1,0 +1,3 @@
+// Implementação
+
+#include "lote.h"
