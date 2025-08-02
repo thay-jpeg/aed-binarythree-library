@@ -30,11 +30,13 @@ static int insere_livro_recursivo(FILE *arq, int pos_atual, livro *novo_livro)
 
     livro *atual = le_livro(arq, pos_atual);
 
+    //se for menor que o valor da raiz atual, esquerda
     if (novo_livro->codigo < atual->codigo)
     {
         int pos_filho_esq = insere_livro_recursivo(arq, atual->pos_esq, novo_livro);
         atual->pos_esq = pos_filho_esq;
     }
+    //se for maior, direita
     else
     {
         int pos_filho_dir = insere_livro_recursivo(arq, atual->pos_dir, novo_livro);
