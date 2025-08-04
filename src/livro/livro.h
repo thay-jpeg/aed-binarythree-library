@@ -12,9 +12,9 @@ void insere_livro(FILE *arq, livro *novo_livro);
 
 void cadastrar_livro(FILE *arq);
 
-//void imprimir_dados_livro(FILE *arq);
+void imprimir_dados_livro(FILE *arq);
 
-//void listar_livros(FILE *arq);
+void listar_livros(FILE *arq);
 
 //void calcular_total(FILE *arq);
 

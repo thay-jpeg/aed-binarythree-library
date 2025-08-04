@@ -51,10 +51,10 @@ void processar_sistema(FILE *arq, int opcao)
         cadastrar_livro(arq);
         break;
     case 2:
-        // imprimir_dados_livro(arq);
+        imprimir_dados_livro(arq);
         break;
     case 3:
-        // listar_livros(arq);
+        listar_livros(arq);
         break;
     case 4:
         // calcular_total(arq);
