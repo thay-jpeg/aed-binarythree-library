@@ -30,7 +30,6 @@ typedef struct
     int exemplares;
     double preco;
 
-    int livre;
     int pos_esq;
     int pos_dir;
 

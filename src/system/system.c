@@ -19,7 +19,7 @@ void exibir_menu()
     printf("5- Remover cadastro de um livro.\n");
     printf("6- Carregar arquivo em lote.\n");
     printf("7- Listar todos os registros livres.\n");
-    printf("8- Imprimir chaves da árvore por níveis.\n");
+    printf("8- Imprimir chaves da arvore por niveis.\n");
     printf("0- Sair\n");
     printf("\n======================================================================================\n");
 
@@ -144,29 +144,4 @@ void cria_arquivo_vazio(FILE *arq)
 
     escreve_cabecalho(arq, cab);
     free(cab);
-}
-
-int obter_posicao_livre(FILE *arq, cabecalho *cab)
-{
-
-    int pos;
-
-    //se tiver uma posicao livre
-    if (cab->pos_livre != -1)
-    {
-
-        pos = cab->pos_livre;
-
-        livro *livre = le_livro(arq, pos);
-        cab->pos_livre = livre->pos_esq; //aponta para o prox livro com pos livre
-        free(livre);
-    }
-
-    //se nao tiver, será inserção em cabeça
-    else
-    {
-        pos = cab->pos_topo;
-        cab->pos_topo++;
-    }
-    return pos;
 }

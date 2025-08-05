@@ -9,40 +9,48 @@ int vazia(livro *l)
     return (l == NULL);
 }
 
-static int insere_livro_recursivo(FILE *arq, int pos_atual, livro *novo_livro)
+static int insere_livro_recursivo(FILE *arq, int pos_atual, livro *novo_livro, cabecalho *cab)
 {
     // lugar vago na arvore
     if (pos_atual == -1)
     {
-        cabecalho *cab = le_cabecalho(arq);
-        int nova_pos = obter_posicao_livre(arq, cab);
+        int nova_pos;
+
+        if (cab->pos_livre != -1)
+        {
+            nova_pos = cab->pos_livre;
+            livro *aux = le_livro(arq, cab->pos_livre);
+            cab->pos_livre = aux->pos_dir;
+            free(aux);
+        }
+        else
+            nova_pos = cab->pos_topo++;
 
         novo_livro->pos_esq = -1;
         novo_livro->pos_dir = -1;
-        novo_livro->livre = 1; // posicao ocupada da arvore
 
         escreve_livro(arq, novo_livro, nova_pos);
-
-        escreve_cabecalho(arq, cab);
-
-        free(cab);
 
         return nova_pos;
     }
 
     livro *atual = le_livro(arq, pos_atual);
 
-    //se for menor que o valor da raiz atual, esquerda
+    // se for menor que o valor da raiz atual, esquerda
     if (novo_livro->codigo < atual->codigo)
     {
-        int pos_filho_esq = insere_livro_recursivo(arq, atual->pos_esq, novo_livro);
+        int pos_filho_esq = insere_livro_recursivo(arq, atual->pos_esq, novo_livro, cab);
         atual->pos_esq = pos_filho_esq;
     }
-    //se for maior, direita
+    // se for maior, direita
+    else if (novo_livro->codigo > atual->codigo)
+    {
+        int pos_filho_dir = insere_livro_recursivo(arq, atual->pos_dir, novo_livro, cab);
+        atual->pos_dir = pos_filho_dir;
+    }
     else
     {
-        int pos_filho_dir = insere_livro_recursivo(arq, atual->pos_dir, novo_livro);
-        atual->pos_dir = pos_filho_dir;
+        printf("\nAVISO: Um livro com o codigo %02d ja existe. Nao eh possivel cadastrar livros duplicados.\n", novo_livro->codigo);
     }
 
     // salva as alterações no arquivo de esq e dir
@@ -57,14 +65,9 @@ void insere_livro(FILE *arq, livro *novo_livro)
     cabecalho *cab = le_cabecalho(arq);
     int pos_raiz = cab->pos_raiz;
 
-    int nova_raiz = insere_livro_recursivo(arq, pos_raiz, novo_livro);
+    cab->pos_raiz = insere_livro_recursivo(arq, pos_raiz, novo_livro, cab);
 
-    // se a raiz tiver sido alterada
-    if (cab->pos_raiz != nova_raiz)
-    {
-        cab->pos_raiz = nova_raiz;
-        escreve_cabecalho(arq, cab);
-    }
+    escreve_cabecalho(arq, cab);
 
     free(cab);
 }
@@ -140,7 +143,7 @@ void listar_livros(FILE *arq)
     }
     else
     {
-        printf("--------------------------------------------------\n"); 
+        printf("--------------------------------------------------\n");
         listar_livros_recursivo(arq, cab->pos_raiz);
     }
 
@@ -161,16 +164,14 @@ static int busca_livro_recursivo(FILE *arq, int pos_atual, int codigo_busca)
     }
 
     livro *atual = le_livro(arq, pos_atual);
+    int pos_encontrada = -1;
 
     if (codigo_busca == atual->codigo)
     {
-        free(atual);
-        return pos_atual;
+        pos_encontrada = pos_atual;
     }
 
-    int pos_encontrada;
-
-    if (codigo_busca < atual->codigo)
+    else if (codigo_busca < atual->codigo)
     {
         pos_encontrada = busca_livro_recursivo(arq, atual->pos_esq, codigo_busca);
     }
@@ -183,7 +184,7 @@ static int busca_livro_recursivo(FILE *arq, int pos_atual, int codigo_busca)
     return pos_encontrada;
 }
 
-// Propósito: Dado um código, imprime as informações do respectivo livro. 
+// Propósito: Dado um código, imprime as informações do respectivo livro.
 // Pré-condições: Arquivo binário de livros aberto.
 // Pós-condições: As informações do livro são exibidas na tela, ou uma mensagem de erro se o livro não for encontrado.
 void imprimir_dados_livro(FILE *arq)
@@ -200,7 +201,7 @@ void imprimir_dados_livro(FILE *arq)
 
     if (pos_livro != -1)
     {
-    
+
         livro *encontrado = le_livro(arq, pos_livro);
         printf("Codigo:       %d\n", encontrado->codigo);
         printf("Titulo:       %s\n", encontrado->titulo);
@@ -216,8 +217,8 @@ void imprimir_dados_livro(FILE *arq)
     {
         printf("Livro com o codigo %d nao foi encontrado no sistema.\n", codigo_busca);
     }
-    
+
     printf("\n======================================================================================\n");
-    
+
     free(cab);
 }
