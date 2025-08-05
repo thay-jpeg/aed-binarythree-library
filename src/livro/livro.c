@@ -16,6 +16,7 @@ static int insere_livro_recursivo(FILE *arq, int pos_atual, livro *novo_livro, c
     {
         int nova_pos;
 
+        // se tiver posicao livre
         if (cab->pos_livre != -1)
         {
             nova_pos = cab->pos_livre;
@@ -23,6 +24,8 @@ static int insere_livro_recursivo(FILE *arq, int pos_atual, livro *novo_livro, c
             cab->pos_livre = aux->pos_dir;
             free(aux);
         }
+
+        // nao tem posicao livre, usar do topo
         else
             nova_pos = cab->pos_topo++;
 
