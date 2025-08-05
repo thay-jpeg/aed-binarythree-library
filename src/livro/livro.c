@@ -53,7 +53,7 @@ static int insere_livro_recursivo(FILE *arq, int pos_atual, livro *novo_livro, c
     }
     else
     {
-        printf("\nAVISO: Um livro com o codigo %02d ja existe. Nao eh possivel cadastrar livros duplicados.\n", novo_livro->codigo);
+        printf("\nAVISO: Um livro com o codigo %03d ja existe. Nao eh possivel cadastrar livros duplicados.\n", novo_livro->codigo);
     }
 
     // salva as alterações no arquivo de esq e dir
@@ -123,11 +123,7 @@ static void listar_livros_recursivo(FILE *arq, int pos_atual)
 
     listar_livros_recursivo(arq, atual->pos_esq);
 
-    printf("Codigo: %d\n", atual->codigo);
-    printf("Titulo: %s\n", atual->titulo);
-    printf("Autor: %s\n", atual->autor);
-    printf("Exemplares: %d\n\n", atual->exemplares);
-    printf("--------------------------------------------------\n");
+    printf("%03d | %-35s | %-20s | %d\n", atual->codigo, atual->titulo, atual->autor, atual->exemplares);
 
     listar_livros_recursivo(arq, atual->pos_dir);
 
@@ -138,7 +134,7 @@ void listar_livros(FILE *arq)
 {
     cabecalho *cab = le_cabecalho(arq);
 
-    printf("\n============================= Lista de Livros Cadastrados ============================\n\n");
+    printf("\n============================= Lista de Livros Cadastrados ============================\n");
 
     if (cab->pos_raiz == -1)
     {
@@ -146,11 +142,13 @@ void listar_livros(FILE *arq)
     }
     else
     {
-        printf("--------------------------------------------------\n");
+        printf("%-3s | %-35s | %-20s | %s\n", "Cod", "Titulo", "Autor", "Exemplares");
+        printf("======================================================================================\n");
+
         listar_livros_recursivo(arq, cab->pos_raiz);
     }
 
-    printf("\n======================================================================================\n");
+    printf("======================================================================================\n");
 
     free(cab);
 }
@@ -206,7 +204,7 @@ void imprimir_dados_livro(FILE *arq)
     {
 
         livro *encontrado = le_livro(arq, pos_livro);
-        printf("Codigo:       %d\n", encontrado->codigo);
+        printf("Codigo:       %03d\n", encontrado->codigo);
         printf("Titulo:       %s\n", encontrado->titulo);
         printf("Autor:        %s\n", encontrado->autor);
         printf("Editora:      %s\n", encontrado->editora);
@@ -218,9 +216,58 @@ void imprimir_dados_livro(FILE *arq)
     }
     else
     {
-        printf("Livro com o codigo %d nao foi encontrado no sistema.\n", codigo_busca);
+        printf("Livro com o codigo %03d nao foi encontrado no sistema.\n", codigo_busca);
     }
 
+    printf("\n====================================================================================\n");
+
+    free(cab);
+}
+
+// Entrada: Ponteiro para o arquivo, a posição do registro e um ponteiro para uma struct 'livro' de destino.
+// Retorno: 1 se a leitura for bem-sucedida, 0 caso contrario.
+// Pré-condição: O ponteiro de arquivo deve ser válido. O ponteiro 'destino' deve apontar para uma área de memória alocada.
+// Pós-condição: A struct 'destino' é preenchida com os dados lidos da posição especificada no arquivo.
+static int busca_livro(FILE *arq, int pos, livro *destino)
+{
+
+    fseek(arq, sizeof(cabecalho) + pos * sizeof(livro), SEEK_SET);
+
+    if (fread(destino, sizeof(livro), 1, arq) == 1)
+        return 1;
+
+    return 0;
+}
+
+// Entrada: Ponteiro para o arquivo de livros.
+// Retorno: Nenhum
+// Pré-condição: O ponteiro de arquivo deve ser valido e aberto em "r+b".
+// Pós-condição: O numero total de livros cadastrados (excluindo os da lista de livres) eh exibido na tela.
+void calcular_total(FILE *arq)
+{
+
+    cabecalho *cab = le_cabecalho(arq);
+
+    int temp = 0;
+    int total_topo = cab->pos_topo;
+    int livre_atual = cab->pos_livre;
+    livro aux;
+
+    while (livre_atual != -1)
+    {
+        if (busca_livro(arq, livre_atual, &aux))
+        {
+            temp++;
+            livre_atual = aux.pos_dir;
+        }
+        else
+        {
+            printf("ERRO: Nao foi possivel acessar o arquivo de dados...\n");
+            livre_atual = -1;
+        }
+    }
+    printf("\n======================================================================================\n");
+    printf("                            Total de livros cadastrados: %d         ", total_topo - temp);
     printf("\n======================================================================================\n");
 
     free(cab);

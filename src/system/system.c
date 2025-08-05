@@ -57,7 +57,7 @@ void processar_sistema(FILE *arq, int opcao)
         listar_livros(arq);
         break;
     case 4:
-        // calcular_total(arq);
+        calcular_total(arq);
         break;
     case 5:
         // remover_livro(arq);
