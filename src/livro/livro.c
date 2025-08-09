@@ -4,11 +4,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Entrada: Ponteiro para um livro (livro *l).
+// Retorno: Inteiro (1 para verdadeiro, 0 para falso).
+// Pré-condição: Nenhuma.
+// Pós-condição: Retorna 1 se o ponteiro para o livro é nulo, indicando que está "vazio", e 0 caso contrário.
 int vazia(livro *l)
 {
     return (l == NULL);
 }
-
+// Entrada: Ponteiro para arquivo (FILE *arq), posição atual na árvore (int pos_atual), ponteiro para o novo livro (livro *novo_livro) 
+//e ponteiro para o cabeçalho (cabecalho *cab).
+// Retorno: Inteiro representando a posição do nó atualizado ou do novo nó inserido.
+// Pré-condição: 'arq' deve estar aberto, 'novo_livro' e 'cab' devem ser válidos.
+// Pós-condição: O livro é inserido recursivamente na árvore. Se um espaço livre estiver disponível, ele é reutilizado; senão, o livro é inserido no topo.
 static int insere_livro_recursivo(FILE *arq, int pos_atual, livro *novo_livro, cabecalho *cab)
 {
     // lugar vago na arvore
@@ -63,6 +71,10 @@ static int insere_livro_recursivo(FILE *arq, int pos_atual, livro *novo_livro, c
     return pos_atual;
 }
 
+// Entrada: Ponteiro para o arquivo (FILE *arq) e ponteiro para o livro a ser inserido (livro *novo_livro).
+// Retorno: Nenhum.
+// Pré-condição: 'arq' deve estar aberto e 'novo_livro' deve ser um ponteiro válido.
+// Pós-condição: O livro é inserido na árvore de dados e o cabeçalho do arquivo é atualizado.
 void insere_livro(FILE *arq, livro *novo_livro)
 {
     cabecalho *cab = le_cabecalho(arq);
@@ -75,6 +87,10 @@ void insere_livro(FILE *arq, livro *novo_livro)
     free(cab);
 }
 
+// Entrada: Ponteiro para o arquivo (FILE *arq).
+// Retorno: Nenhum.
+// Pré-condição: O arquivo 'arq' deve estar aberto.
+// Pós-condição: Solicita os dados de um novo livro ao usuário via console e o cadastra no sistema.
 void cadastrar_livro(FILE *arq)
 {
 
@@ -112,6 +128,10 @@ void cadastrar_livro(FILE *arq)
     printf("\n======================================================================================\n");
 }
 
+// Entrada: Ponteiro para o arquivo (FILE *arq) e a posição do nó atual na árvore (int pos_atual).
+// Retorno: Nenhum.
+// Pré-condição: O arquivo 'arq' deve estar aberto.
+// Pós-condição: Percorre a árvore em-ordem (in-order) de forma recursiva, imprimindo os dados de cada livro.
 static void listar_livros_recursivo(FILE *arq, int pos_atual)
 {
     if (pos_atual == -1)
@@ -130,6 +150,10 @@ static void listar_livros_recursivo(FILE *arq, int pos_atual)
     free(atual);
 }
 
+// Entrada: Ponteiro para o arquivo de livros (FILE *arq).
+// Retorno: Nenhum.
+// Pré-condição: O arquivo 'arq' deve estar aberto.
+// Pós-condição: Exibe na tela uma lista de todos os livros cadastrados, em ordem crescente de código.
 void listar_livros(FILE *arq)
 {
     cabecalho *cab = le_cabecalho(arq);
@@ -153,9 +177,10 @@ void listar_livros(FILE *arq)
     free(cab);
 }
 
-// Propósito: Função auxiliar para buscar um livro pelo código na árvore de forma recursiva.
-// Pré-condições: Arquivo binário aberto, posição do nó atual e código a ser buscado.
-// Pós-condições: Retorna a posição do livro no arquivo se encontrado, ou -1 caso contrário.
+// Entrada: Ponteiro para o arquivo (FILE *arq), posição do nó atual (int pos_atual) e o código a ser buscado (int codigo_busca).
+// Retorno: Inteiro com a posição do livro no arquivo, ou -1 se não for encontrado.
+// Pré-condição: Arquivo binário deve estar aberto.
+// Pós-condição: A árvore é percorrida recursivamente em busca do livro com o código especificado.
 static int busca_livro_recursivo(FILE *arq, int pos_atual, int codigo_busca)
 {
 
@@ -185,6 +210,8 @@ static int busca_livro_recursivo(FILE *arq, int pos_atual, int codigo_busca)
     return pos_encontrada;
 }
 
+// Entrada: Ponteiro para o arquivo de livros (FILE *arq).
+// Retorno: Nenhum.
 // Propósito: Dado um código, imprime as informações do respectivo livro.
 // Pré-condições: Arquivo binário de livros aberto.
 // Pós-condições: As informações do livro são exibidas na tela, ou uma mensagem de erro se o livro não for encontrado.
@@ -379,9 +406,10 @@ int remover_livro_recursivo(FILE *arq, int pos_atual, int codigo_remover, cabeca
     return pos_atual;
 }
 
-// Propósito: Remove um livro do cadastro dado o seu código.
-// Pré-condições: Arquivo binário de livros aberto.
-// Pós-condições: O livro é removido da árvore e seu registro adicionado à lista de livres.
+// Entrada: Ponteiro para o arquivo de livros (FILE *arq).
+// Retorno: Nenhum.
+// Pré-condição: Arquivo binário deve estar aberto.
+// Pós-condição: Solicita um código ao usuário e remove o livro correspondente do cadastro, adicionando seu espaço à lista de livres.
 void remover_livro(FILE *arq)
 {
     int codigo_remover;
