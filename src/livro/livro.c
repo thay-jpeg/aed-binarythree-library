@@ -272,3 +272,143 @@ void calcular_total(FILE *arq)
 
     free(cab);
 }
+
+// Propósito: Adiciona a posição de um registro removido à lista de livres.
+// Pré-condições: Arquivo aberto, posição a ser liberada e ponteiro para o cabeçalho.
+// Pós-condições: O registro na 'pos_removida' é encadeado no início da lista de livres.
+static void adicionar_a_lista_livre(FILE *arq, int pos_removida, cabecalho *cab)
+{
+    livro *livro_removido = le_livro(arq, pos_removida);
+
+    livro_removido->pos_dir = cab->pos_livre;
+
+    cab->pos_livre = pos_removida;
+
+    escreve_livro(arq, livro_removido, pos_removida);
+
+    free(livro_removido);
+}
+
+// Propósito: Encontrar o nó com o maior código na subárvore fornecida (predecessor em-ordem).
+// Pré-condições: Arquivo aberto, posição inicial da subárvore (raiz da subárvore esquerda).
+// Pós-condições: Retorna a posição do nó com o maior valor na subárvore.
+int encontrar_maior_predecessor(FILE *arq, int pos_inicio)
+{
+    livro *atual = le_livro(arq, pos_inicio);
+    int pos_predecessor = pos_inicio;
+
+    while (atual->pos_dir != -1)
+    {
+        pos_predecessor = atual->pos_dir;
+        free(atual); // Libera o livro lido anteriormente
+        atual = le_livro(arq, pos_predecessor);
+    }
+
+    free(atual);
+    return pos_predecessor;
+}
+
+// Propósito: Função recursiva para buscar e remover um livro da árvore.
+// Pré-condições: Arquivo aberto, posição do nó atual, código do livro a ser removido e cabeçalho.
+// Pós-condições: Retorna a nova posição do nó atual após a eventual remoção.
+int remover_livro_recursivo(FILE *arq, int pos_atual, int codigo_remover, cabecalho *cab)
+{
+    
+    if (pos_atual == -1)
+    {
+        return -1;
+    }
+
+    livro *atual = le_livro(arq, pos_atual);
+
+    if (codigo_remover < atual->codigo)
+    {
+        atual->pos_esq = remover_livro_recursivo(arq, atual->pos_esq, codigo_remover, cab);
+    }
+    else if (codigo_remover > atual->codigo)
+    {
+        atual->pos_dir = remover_livro_recursivo(arq, atual->pos_dir, codigo_remover, cab);
+    }
+    else
+    {
+        if (atual->pos_esq == -1 && atual->pos_dir == -1)
+        {
+            adicionar_a_lista_livre(arq, pos_atual, cab);
+            free(atual);
+            return -1; 
+        }
+        
+        else if (atual->pos_esq == -1)
+        {
+            int pos_filho_dir = atual->pos_dir;
+            adicionar_a_lista_livre(arq, pos_atual, cab);
+            free(atual);
+            return pos_filho_dir; 
+        }
+        else if (atual->pos_dir == -1)
+        {
+            int pos_filho_esq = atual->pos_esq;
+            adicionar_a_lista_livre(arq, pos_atual, cab);
+            free(atual);
+            return pos_filho_esq; 
+        }
+        
+        else
+        {
+        
+            int pos_predecessor = encontrar_maior_predecessor(arq, atual->pos_esq);
+            livro *predecessor = le_livro(arq, pos_predecessor);
+
+            atual->codigo = predecessor->codigo;
+            strcpy(atual->titulo, predecessor->titulo);
+            strcpy(atual->autor, predecessor->autor);
+            strcpy(atual->editora, predecessor->editora);
+            atual->edicao = predecessor->edicao;
+            atual->ano = predecessor->ano;
+            atual->exemplares = predecessor->exemplares;
+            atual->preco = predecessor->preco;
+
+            free(predecessor);
+
+            atual->pos_esq = remover_livro_recursivo(arq, atual->pos_esq, atual->codigo, cab);
+        }
+    }
+
+    escreve_livro(arq, atual, pos_atual);
+    free(atual);
+    return pos_atual;
+}
+
+// Propósito: Remove um livro do cadastro dado o seu código.
+// Pré-condições: Arquivo binário de livros aberto.
+// Pós-condições: O livro é removido da árvore e seu registro adicionado à lista de livres.
+void remover_livro(FILE *arq)
+{
+    int codigo_remover;
+    printf("\n=============================== Remocao de Livro =====================================\n");
+    printf("\nDigite o codigo do livro que deseja remover: ");
+    scanf("%d%*c", &codigo_remover);
+
+    cabecalho *cab = le_cabecalho(arq);
+    int pos_raiz_inicial = cab->pos_raiz;
+
+    cab->pos_raiz = remover_livro_recursivo(arq, cab->pos_raiz, codigo_remover, cab);
+
+    if (pos_raiz_inicial != -1 && cab->pos_raiz == pos_raiz_inicial && busca_livro_recursivo(arq, cab->pos_raiz, codigo_remover) != -1)
+    {
+         printf("\nAVISO: Livro com codigo %03d nao foi encontrado para remocao.\n", codigo_remover);
+    }
+    else if (pos_raiz_inicial == -1)
+    {
+        printf("\nAVISO: A arvore esta vazia. Nenhum livro para remover.\n");
+    }
+    else
+    {
+        printf("\nLivro com codigo %03d removido com sucesso.\n", codigo_remover);
+    }
+
+    escreve_cabecalho(arq, cab);
+
+    printf("\n======================================================================================\n");
+    free(cab);
+}

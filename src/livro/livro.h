@@ -18,6 +18,6 @@ void listar_livros(FILE *arq);
 
 void calcular_total(FILE *arq);
 
-// void remover_livro(FILE *arq);
+void remover_livro(FILE *arq);
 
 #endif

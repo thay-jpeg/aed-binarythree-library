@@ -60,7 +60,7 @@ void processar_sistema(FILE *arq, int opcao)
         calcular_total(arq);
         break;
     case 5:
-        // remover_livro(arq);
+        remover_livro(arq);
         break;
     case 6:
         // carregar_lote(arq);
