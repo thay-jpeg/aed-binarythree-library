@@ -11,8 +11,6 @@
 // Pós-condição: Retorna 1 se o ponteiro para o livro é nulo, e 0 caso contrário.
 int vazia(livro *l);
 
-// Auxiliar
-
 // Entrada: Ponteiro para o arquivo (FILE *arq) e ponteiro para o livro a ser inserido (livro *novo_livro).
 // Retorno: Nenhum.
 // Pré-condição: 'arq' deve estar aberto e 'novo_livro' deve ser um ponteiro válido.

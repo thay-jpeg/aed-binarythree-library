@@ -71,13 +71,13 @@ void processar_sistema(FILE *arq, int opcao)
         remover_livro(arq);
         break;
     case 6:
-        // carregar_lote(arq);
+        carregar_lote(arq);
         break;
     case 7:
         imprimir_registros_livres(arq);
         break;
     case 8:
-        // imprimir_arvore_niveis(arq);
+        imprimir_arvore_niveis(arq);
         break;
     case 0:
         break;
@@ -183,7 +183,7 @@ void cria_arquivo_vazio(FILE *arq)
 // Pós-condições: As posições da lista de registros livres são exibidas na tela.
 void imprimir_registros_livres(FILE *arq)
 {
-    printf("\n======================= Lista de Registros Livres =========================\n\n");
+    printf("\n============================= Lista de Registros Livres ==============================\n\n");
 
     cabecalho *cab = le_cabecalho(arq);
     int pos_atual_livre = cab->pos_livre;
@@ -195,21 +195,183 @@ void imprimir_registros_livres(FILE *arq)
     else
     {
         printf("Posicoes dos registros na lista de livres (do inicio para o fim):\n");
-        
+
         while (pos_atual_livre != -1)
         {
             printf(" -> Posicao no arquivo: %d\n", pos_atual_livre);
-            
 
             livro *temp_livro = le_livro(arq, pos_atual_livre);
-            
 
-            pos_atual_livre = temp_livro->pos_dir; 
-            
+            pos_atual_livre = temp_livro->pos_dir;
+
             free(temp_livro);
         }
     }
 
-    printf("\n===========================================================================\n");
+    printf("\n======================================================================================\n");
+    free(cab);
+}
+
+// Entrada: Ponteiro para a estrutura de controle da fila
+// Retorno: Inteiro (booleano). Retorna 1 (verdadeiro) se a fila estiver vazia, ou 0 (falso) caso contrário.
+// Pré-condição: Nenhuma
+// Pós-condição: O estado da fila permanece inalterado, pois a função apenas realiza uma verificação.
+int vazia_fila(fila *f)
+{
+    return (f == NULL || f->inicio == NULL);
+}
+
+// Entrada: Ponteiro para a fila ser completamente liberada da memória.
+// Retorno: Nenhum
+// Pré-condição: 'f' deve ser um ponteiro para uma fila válida.
+// Pós-condição: Toda a memória dinâmica alocada para a fila e seus nós é liberada.
+void liberar_fila(fila *f)
+{
+    if (!f)
+        return;
+
+    while (!vazia_fila(f))
+        unqueue(f);
+
+    free(f);
+}
+
+// Entrada: Nenhuma.
+// Retorno: Um ponteiro para a nova estrutura de fila criada e inicializada. Retorna NULL em caso de falha na alocação de memória.
+// Pré-condição: Nenhuma.
+// Pós-condição: Uma nova fila vazia é criada na memória heap.
+fila *criar_fila()
+{
+    fila *f = (fila *)malloc(sizeof(fila));
+    if (f)
+    {
+        f->inicio = f->fim = NULL;
+    }
+    return f;
+}
+
+// Entrada: Ponteiro para a fila onde o elemento será inserido e o valor inteiro a ser adicionado.
+// Retorno: Nenhum
+// Pré-condição: 'f' deve apontar para uma fila válida e inicializada.
+// Pós-condição: Um novo nó contendo o valor 'pos' é criado e adicionado ao final da fila.
+void queue(fila *f, int pos)
+{
+    filaEndereco *novo = (filaEndereco *)malloc(sizeof(filaEndereco));
+    if (!f)
+    {
+        printf("ERRO: Nao foi possivel alocar memoria para o objeto na fila.\n");
+        return;
+    }
+
+    novo->pos = pos;
+    novo->prox = NULL;
+
+    // a fila estava fazia, primeiro livro a ser enfileirado
+    if (!f->fim)
+    {
+        f->inicio = f->fim = novo;
+    }
+    // a fila possui livros ja enfileirados
+    else
+    {
+        // atualiza os ponteiros do novo livro enfileirado no final da fila
+        f->fim->prox = novo;
+        f->fim = novo;
+    }
+}
+
+// Entrada: Ponteiro para a fila da qual o elemento será removido.
+// Retorno: O valor inteiro do elemento que estava no início da fila. Retorna -1 se a fila estiver vazia.
+// Pré-condição: 'f' deve apontar para uma fila válida.
+// Pós-condição: O primeiro nó da fila é removido e sua memória é liberada. O ponteiro 'inicio' da fila é atualizado para o próximo nó. Se a fila ficar vazia, 'inicio' e 'fim' se tornam NULL.
+int unqueue(fila *f)
+{
+    // a fila esta vazia
+    if (!f->inicio)
+        return -1;
+
+    filaEndereco *aux = f->inicio;
+    int pos = aux->pos;
+
+    // atualiza o comeco da fila
+    f->inicio = f->inicio->prox;
+
+    // se for o ultimo da fila
+    if (!f->inicio)
+        f->fim = NULL;
+
+    free(aux);
+    return pos;
+}
+
+// Entrada: Ponteiro para o arquivo de dados principal.
+// Retorno: Nenhum
+// Pré-condição: 'arq' deve ser um ponteiro válido para o arquivo binário.
+// Pós-condição: Os códigos dos livros na árvore são exibidos no console, ordenados por nível, com cada nível sendo impresso em uma nova linha.
+void imprimir_arvore_niveis(FILE *arq)
+{
+
+    printf("\n======================================================================================\n");
+    printf("                                 Impressao por Niveis              ");
+    printf("\n======================================================================================\n\n");
+
+    cabecalho *cab = le_cabecalho(arq);
+
+    if (cab->pos_raiz == -1)
+    {
+        printf("A arvore esta vazia.\n");
+        printf("\n======================================================================================\n");
+        free(cab);
+        return;
+    }
+
+    fila *fila = criar_fila();
+    queue(fila, cab->pos_raiz);
+
+    int nivel = 1;
+
+    while (!vazia_fila(fila))
+    {
+        int aux = 0;
+        filaEndereco *temp = fila->inicio;
+
+        while (temp)
+        {
+            aux++;
+            temp = temp->prox;
+        }
+
+        printf("                                       Nivel %d                                 \n\n", nivel++);
+
+        for (int i = 0; i < aux; i++)
+        {
+            int pos = unqueue(fila);
+
+            livro *livro_atual = le_livro(arq, pos);
+
+            if (livro_atual)
+            {
+                if (i == 0)
+                    printf("                                       ");
+
+                printf("  %d  ", livro_atual->codigo);
+
+                if (livro_atual->pos_esq != -1)
+                {
+                    queue(fila, livro_atual->pos_esq);
+                }
+                if (livro_atual->pos_dir != -1)
+                {
+                    queue(fila, livro_atual->pos_dir);
+                }
+
+                free(livro_atual);
+            }
+        }
+        printf("\n\n");
+    }
+
+    printf("\n======================================================================================\n\n");
+    liberar_fila(fila);
     free(cab);
 }

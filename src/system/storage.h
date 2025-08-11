@@ -35,4 +35,16 @@ typedef struct
 
 } livro;
 
+typedef struct No
+{
+    int pos;
+    struct No *prox;
+} filaEndereco;
+
+typedef struct Fila
+{
+    filaEndereco *inicio;
+    filaEndereco *fim;
+} fila;
+
 #endif

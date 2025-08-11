@@ -73,6 +73,40 @@ int obter_posicao_livre(FILE *arq, cabecalho *cab);
 // Pós-condição: As posições da lista de registros livres são exibidas na tela.
 void imprimir_registros_livres(FILE *arq);
 
-//void imprimir_arvore_niveis(FILE *arq);
+// Entrada: Ponteiro para a estrutura de controle da fila
+// Retorno: Inteiro (booleano). Retorna 1 (verdadeiro) se a fila estiver vazia, ou 0 (falso) caso contrário.
+// Pré-condição: Nenhuma
+// Pós-condição: O estado da fila permanece inalterado, pois a função apenas realiza uma verificação.
+int vazia_fila(fila *f);
+
+// Entrada: Ponteiro para a fila ser completamente liberada da memória.
+// Retorno: Nenhum
+// Pré-condição: 'f' deve ser um ponteiro para uma fila válida.
+// Pós-condição: Toda a memória dinâmica alocada para a fila e seus nós é liberada.
+void liberar_fila(fila *f);
+
+// Entrada: Nenhuma.
+// Retorno: Um ponteiro para a nova estrutura de fila criada e inicializada. Retorna NULL em caso de falha na alocação de memória.
+// Pré-condição: Nenhuma.
+// Pós-condição: Uma nova fila vazia é criada na memória heap.
+fila *criar_fila();
+
+// Entrada: Ponteiro para a fila onde o elemento será inserido e o valor inteiro a ser adicionado.
+// Retorno: Nenhum
+// Pré-condição: 'f' deve apontar para uma fila válida e inicializada.
+// Pós-condição: Um novo nó contendo o valor 'pos' é criado e adicionado ao final da fila.
+void queue(fila *f, int pos);
+
+// Entrada: Ponteiro para a fila da qual o elemento será removido.
+// Retorno: O valor inteiro do elemento que estava no início da fila. Retorna -1 se a fila estiver vazia.
+// Pré-condição: 'f' deve apontar para uma fila válida.
+// Pós-condição: O primeiro nó da fila é removido e sua memória é liberada. O ponteiro 'inicio' da fila é atualizado para o próximo nó. Se a fila ficar vazia, 'inicio' e 'fim' se tornam NULL.
+int unqueue(fila *f);
+
+// Entrada: Ponteiro para o arquivo de dados principal.
+// Retorno: Nenhum
+// Pré-condição: 'arq' deve ser um ponteiro válido para o arquivo binário.
+// Pós-condição: Os códigos dos livros na árvore são exibidos no console, ordenados por nível, com cada nível sendo impresso em uma nova linha.
+void imprimir_arvore_niveis(FILE *arq);
 
 #endif
