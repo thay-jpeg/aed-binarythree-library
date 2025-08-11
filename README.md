@@ -30,6 +30,7 @@ O sistema possui 9 (nove) opções, sendo:
 > **4.** **Calcular total de livros cadastrados:** 
 >
 > a\. Exibe na tela a quantidade total de livros cadastrados no sistema. Caso nenhum livro for cadastrado, aparecerá um resultante equivalente à *“0”*. 
+>
 > b\. **Como usar:** apenas selecione a opção no menu para visualizar a quantidade total. 
 >
 > **5.** **Remover livro:** 
