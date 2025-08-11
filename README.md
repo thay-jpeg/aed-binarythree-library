@@ -29,32 +29,32 @@ O sistema possui 9 (nove) opções, sendo:
 >
 > **4.** **Calcular total de livros cadastrados:** 
 >
-> a\. Exibe na tela a quantidade total de livros cadastrados no sistema. Caso nenhum livro for cadastrado, aparecerá um resultante equivalente à *“0”. 
+> a\. Exibe na tela a quantidade total de livros cadastrados no sistema. Caso nenhum livro for cadastrado, aparecerá um resultante equivalente à *“0”*. 
 > b\. **Como usar:** apenas selecione a opção no menu para visualizar a quantidade total. 
 >
 > **5.** **Remover livro:** 
 >
 > a\. Esta opção permite a remoção de um respectivo livro. 
 >
-> b\. **Como usar:** você precisará informar o código do livro correspondente. Caso o livro com o código não exista, uma mensagem *“livro com código >não foi encontrado para remoção”*. Se nenhum livro estiver cadastrado no sistema, alertará que *“não há livros para remover, árvore vazia”.* 
+> b\. **Como usar:** você precisará informar o código do livro correspondente. Caso o livro com o código não exista, uma mensagem *“livro com código não foi encontrado para remoção”*. Se nenhum livro estiver cadastrado no sistema, alertará que *“não há livros para remover, árvore vazia”.* 
 >
 > **6.** **Carregar arquivo em Lote:** 
 >
-> a\. Esta funcionalidade realiza inclusões em lote, carregando informações de livros que estão armazenados dentro de um arquivo de texto *.txt*. O sistema lê os dados deste arquivo e os insere diretamente no arquivo binário de cadastro do sistema, ideal para popular o banco de forma rápida. Ele também realiza a contagem da quantidade de registros processados e os exibe na tela. Se houver um livro para cadastro com o mesmo código de um livro que já foi cadastrado no sistema, uma mensagem de aviso  *“não foi possivel cadastrar o livro”* será exibido.* 
+> a\. Esta funcionalidade realiza inclusões em lote, carregando informações de livros que estão armazenados dentro de um arquivo de texto *.txt*. O sistema lê os dados deste arquivo e os insere diretamente no arquivo binário de cadastro do sistema, ideal para popular o banco de forma rápida. Ele também realiza a contagem da quantidade de registros processados e os exibe na tela. Se houver um livro para cadastro com o mesmo código de um livro que já foi cadastrado no sistema, uma mensagem de aviso  *“não foi possivel cadastrar o livro”* será exibido.
 >
-> b\. **Como usar:** você precisará informar o nome do arquivo texto exatamente como está registrado, com letras maiúsculas, minúsculas ou *underline* (\_), se existir, para o sistema puder acessá-lo. **Obs:** O nome do arquivo texto deve ter, no máximo, 255 caracteres e não é necessário inserir a extensão *“.txt”*. O arquivo precisa** estar **OBRIGATORIAMENTE** no diretório *“example/”* para o funcionamento correto.
+> b\. **Como usar:** você precisará informar o nome do arquivo texto exatamente como está registrado, com letras maiúsculas, minúsculas ou *underline* (\_), se existir, para o sistema puder acessá-lo. **Obs:** O nome do arquivo texto deve ter, no máximo, 255 caracteres e não é necessário inserir a extensão *“.txt”*. O arquivo precisa estar **OBRIGATORIAMENTE** no diretório *“example/”* para o funcionamento correto.
 >
 > **7.** **Listar todos os registros livres:** 
 >
-> a\. Esta opção permite a visualização de todas as posições de registros livres que há na árvore. As posições são atualizadas a cada remoção de um livro do sistema e decrementada a cada novo cadastro de livro. Caso não houver nenhuma posição livre disponível, uma *mensagem “não há registros livres no sistema”* será exibida.* 
+> a\. Esta opção permite a visualização de todas as posições de registros livres que há na árvore. As posições são atualizadas a cada remoção de um livro do sistema e decrementada a cada novo cadastro de livro. Caso não houver nenhuma posição livre disponível, uma *mensagem “não há registros livres no sistema”* será exibida.
 >
 > b\. **Como usar:** apenas selecione a opção do menu para verificar a sequência.
 >
 > **8.** **Imprimir árvore por níveis:** 
 >
-> a\. Esta funcionalidade faz a impressão da árvore do arquivo binário do sistema, exibindo, respectivamente, os nós com os códigos dos livros correspondentes em suas alturas. Caso o sistema não possuir nenhum cadastro de livro a árvore estará vazia, portanto, uma mensagem de *“árvore vazia”* será exibida.* 
+> a\. Esta funcionalidade faz a impressão da árvore do arquivo binário do sistema, exibindo, respectivamente, os nós com os códigos dos livros correspondentes em suas alturas. Caso o sistema não possuir nenhum cadastro de livro a árvore estará vazia, portanto, uma mensagem de *“árvore vazia”* será exibida.
 >
-> b\. **Como usar:** apenas selecione a opção do menu para visualizar todos os níveis.* 
+> b\. **Como usar:** apenas selecione a opção do menu para visualizar todos os níveis.
 >
 > **0.  Sair:** 
 >
