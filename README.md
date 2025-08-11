@@ -23,7 +23,7 @@ O sistema possui 9 (nove) opções, sendo:
 >
 > **3.** **Listar todos os livros cadastrados:** 
 >
-> a\. Exibe uma lista formatada com as informações principais de todos os livros que estão no sistema, em ordem crescente, com código, título da >obra, nome do autor e quantidade de exemplares disponíveis. Caso não possuir nenhum livro  no  sistema,  uma  mensagem  de  *“árvore  vazia, nenhum  livro  foi cadastrado”* será exibida. 
+> a\. Exibe uma lista formatada com as informações principais de todos os livros que estão no sistema, em ordem crescente, com código, título da obra, nome do autor e quantidade de exemplares disponíveis. Caso não possuir nenhum livro  no  sistema,  uma  mensagem  de  *“árvore  vazia, nenhum  livro  foi cadastrado”* será exibida. 
 >
 > b\. **Como usar:** apenas selecione a opção no menu para visualizar a tabela completa. 
 >
